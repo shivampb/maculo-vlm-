@@ -1,0 +1,55 @@
+/* Maculo design tokens. Source of truth: brand/tokens.json.
+   Copied into static/css/tokens.css for the web app. */
+:root {
+  /* Core palette */
+  --black: #000000; /* 01 Black */
+  --lime: #91f188; /* 02 Maculo Lime, hero accent */
+  --forest: #0c1f19; /* 03 Deep Forest, primary dark */
+  --sky: #99dbf5; /* 04 Sky, secondary accent */
+  --white: #ffffff; /* 05 White */
+
+  /* Derived tints and shades (for UI only) */
+  --lime-50: #eafbe7;
+  --lime-200: #c8f7c2;
+  --green-700: #1e7a3c; /* green text and links on white */
+  --sky-50: #e8f6fd;
+  --forest-80: #1b322b;
+  --grey-500: #5c6b66; /* secondary text */
+  --grey-200: #dfe5e2; /* borders */
+  --grey-100: #eef2f0; /* quiet fills */
+  --grey-50: #f6f8f7;
+  --alert: #c0392b; /* errors only */
+  --caution-50: #fff4d9;
+  --caution-900: #6b4a0e;
+
+  /* Semantic (light theme) */
+  --bg: var(--white);
+  --surface: var(--white);
+  --surface-2: var(--grey-50);
+  --text: var(--forest);
+  --text-muted: var(--grey-500);
+  --line: var(--grey-200);
+  --accent: var(--forest); /* primary buttons */
+  --accent-strong: var(--black);
+  --accent-soft: var(--lime-50);
+  --on-accent: var(--white);
+  --highlight: var(--lime);
+  --link: var(--green-700);
+  --info-bg: var(--sky-50);
+  --caution-bg: var(--caution-50);
+  --caution-line: #ecd59a;
+  --caution-text: var(--caution-900);
+  --focus: var(--green-700); /* lime is too faint on white for a focus ring */
+
+  /* Type */
+  --font-display: "Outfit", "Segoe UI", system-ui, sans-serif;
+  --font-ui: "Outfit", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, monospace;
+
+  /* Shape */
+  --radius-s: 8px;
+  --radius-m: 12px;
+  --radius-l: 20px;
+  --radius-pill: 999px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}

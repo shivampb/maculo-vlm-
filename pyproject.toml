@@ -1,0 +1,15 @@
+[project]
+name = "maculo"
+version = "1.0.0"
+description = "Outline a skin spot and compare it against conditions you choose. Research use only."
+readme = "README.md"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".", "tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"

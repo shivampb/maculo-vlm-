@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Maculo · A closer look at skin spots</title>
+    <meta
+      name="description"
+      content="Outline a skin spot in a photo, then compare it with the conditions you choose. Research preview, not a diagnosis."
+    />
+    <meta name="theme-color" content="#FFFFFF" />
+    <meta name="color-scheme" content="light" />
+    <meta property="og:title" content="Maculo · A closer look at skin spots" />
+    <meta
+      property="og:description"
+      content="Outline a skin spot, then compare it with the conditions you choose."
+    />
+    <meta property="og:image" content="/static/img/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/tokens.css" />
+    <link rel="stylesheet" href="/static/css/app.css" />
+    <script src="/static/js/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#workspace">Skip to the workspace</a>
+
+    <header class="top">
+      <a class="brand" href="/" aria-label="Maculo home">
+        <img src="/static/img/logo-mark.svg" alt="" width="36" height="36" />
+        <span class="wordmark">maculo</span>
+      </a>
+      <span class="pill">Research preview</span>
+      <nav class="top-actions">
+        <button class="icon-btn" id="how-btn" type="button">How it works</button>
+      </nav>
+    </header>
+
+    <div class="banner" id="model-banner" role="status" hidden></div>
+
+    <main class="layout">
+      <section class="card workspace" id="workspace" aria-labelledby="ws-title">
+        <div class="ws-head">
+          <h1 id="ws-title">A closer look at skin spots.</h1>
+          <p class="sub" id="ws-sub">
+            Add a photo, point at the spot, and see how it compares with the conditions you choose.
+          </p>
+        </div>
+
+        <div class="drop" id="drop">
+          <svg class="drop-art" viewBox="0 0 64 64" aria-hidden="true">
+            <path
+              d="M13 23v-4.5a5.5 5.5 0 0 1 5.5-5.5H23M41 13h4.5a5.5 5.5 0 0 1 5.5 5.5V23M51 41v4.5a5.5 5.5 0 0 1-5.5 5.5H41M23 51h-4.5a5.5 5.5 0 0 1-5.5-5.5V41"
+              fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="2.4" stroke-linecap="round"
+            />
+            <path
+              d="M27.2 21c4.5-2.9 10.6-2.7 14.5.6 4.1 3.4 4.6 8.2 2.6 11.6-1.5 2.6-1 5.5-2.9 8.3-2.7 4-8.9 5.2-13.6 2.9-4.8-2.3-7.9-7.2-7.3-12.4.4-4.4 2.9-8.6 6.7-11z"
+              fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-dasharray="4 3"
+            />
+            <circle cx="32.4" cy="31.6" r="3" class="spot-dot" />
+          </svg>
+          <h2>Drop a skin photo here</h2>
+          <p>or paste one with <kbd>Ctrl</kbd> + <kbd>V</kbd>. JPG, PNG or WEBP.</p>
+          <div class="drop-actions">
+            <label class="btn">
+              Choose a photo
+              <input id="pick" type="file" accept="image/jpeg,image/png,image/webp" hidden />
+            </label>
+            <label class="btn ghost only-touch">
+              Take a photo
+              <input id="camera" type="file" accept="image/*" capture="environment" hidden />
+            </label>
+            <button class="btn ghost" id="sample-btn" type="button">Try a sample</button>
+          </div>
+          <p class="fine">
+            Photos are processed in memory and never saved. They are forgotten after 15 minutes
+            or when you start over.
+          </p>
+        </div>
+
+        <div class="editor" id="editor" hidden>
+          <div class="toolbar" role="toolbar" aria-label="Outline tools">
+            <div class="seg" role="radiogroup" aria-label="What a click does">
+              <button type="button" role="radio" aria-checked="true" data-mode="select" title="Click the spot (S)">
+                Select spot
+              </button>
+              <button type="button" role="radio" aria-checked="false" data-mode="add" title="Add to the outline (A)">
+                + Add area
+              </button>
+              <button type="button" role="radio" aria-checked="false" data-mode="remove" title="Remove from the outline (R)">
+                − Remove area
+              </button>
+            </div>
+            <span class="spacer"></span>
+            <button class="tool" id="undo-btn" type="button" title="Undo last point (Backspace)">Undo</button>
+            <button class="tool" id="download-btn" type="button" disabled>Download</button>
+            <button class="tool" id="new-btn" type="button">New photo</button>
+          </div>
+
+          <div
+            class="stage"
+            id="stage"
+            tabindex="0"
+            role="application"
+            aria-label="Photo. Click the spot or drag a box around it, or use the arrow keys to move the cursor and Enter to place a point."
+            aria-describedby="stage-help"
+          >
+            <img id="photo" alt="Your skin photo" />
+            <canvas id="heat" aria-hidden="true" hidden></canvas>
+            <svg id="overlay" aria-hidden="true"></svg>
+            <div class="stage-busy" id="stage-busy" hidden><span class="spinner"></span></div>
+          </div>
+          <div class="view-row">
+            <div class="seg small" role="radiogroup" aria-label="How the outline is shown" id="view-mode">
+              <button type="button" role="radio" aria-checked="true" data-value="outline">Outline</button>
+              <button type="button" role="radio" aria-checked="false" data-value="spotlight">Spotlight</button>
+              <button type="button" role="radio" aria-checked="false" data-value="heatmap">Heatmap</button>
+            </div>
+            <div class="legend" id="heat-legend" hidden>
+              <span>Less sure</span><i class="ramp"></i><span>More sure</span>
+            </div>
+          </div>
+          <p class="fine center" id="heat-note" hidden>
+            The heatmap shows how sure the outline model is that each part belongs to the spot.
+            It does not show how severe anything is.
+          </p>
+          <p class="hint" id="stage-help">
+            Click the spot, or <b>drag a box</b> around a small spot. Use <b>+ Add area</b> or <b>− Remove area</b> to fix the outline.
+            Keyboard: arrows move, <kbd>Enter</kbd> places a point, <kbd>Backspace</kbd> undoes.
+          </p>
+        </div>
+        <p class="status" id="status" role="status" aria-live="polite"></p>
+      </section>
+
+      <aside class="side">
+        <details class="card result fold" data-fold="result" open>
+          <summary><h2 id="res-title" class="eyebrow">Closest match</h2><span class="chev" aria-hidden="true"></span></summary>
+          <div id="result-empty" class="empty">
+            <p>Your results will appear here.</p>
+          </div>
+          <div id="result" hidden>
+            <div class="top-match">
+              <span class="top-name" id="top-name"></span>
+              <span class="top-score" id="top-score"></span>
+            </div>
+            <span class="chip" id="confidence"></span>
+            <ul class="notes" id="notes"></ul>
+            <h3 class="eyebrow small">Other matches</h3>
+            <ol class="bars" id="others"></ol>
+            <dl class="facts">
+              <div><dt>Compared</dt><dd id="fact-region"></dd></div>
+              <div><dt>Outline quality</dt><dd id="fact-outline"></dd></div>
+              <div><dt>Outline size</dt><dd id="fact-area"></dd></div>
+            </dl>
+          </div>
+          <p class="disclaimer">
+            Not a diagnosis. Scores only rank the conditions on your list. A dermatologist should
+            look at any spot that changes, bleeds, itches or worries you.
+          </p>
+        </details>
+
+        <details class="card fold" data-fold="conditions" open>
+          <summary>
+            <h2 id="cond-title" class="eyebrow tag">Conditions to compare</h2>
+            <span class="count" id="label-count"></span><span class="chev" aria-hidden="true"></span>
+          </summary>
+          <form class="add-label" id="add-label">
+            <label for="custom-label" class="sr-only">Add a condition</label>
+            <input id="custom-label" type="text" maxlength="80" placeholder="Add a condition, e.g. tinea versicolor" autocomplete="off" />
+            <button class="btn small" type="submit">Add</button>
+          </form>
+          <div id="groups"></div>
+          <div class="row-between gap">
+            <button class="link" id="reset-labels" type="button">Reset to defaults</button>
+            <button class="link" id="clear-labels" type="button">Clear all</button>
+          </div>
+        </details>
+
+        <details class="card fold" data-fold="settings" open>
+          <summary><h2 id="set-title" class="eyebrow">Settings</h2><span class="chev" aria-hidden="true"></span></summary>
+          <fieldset class="field">
+            <legend>Outline size</legend>
+            <div class="seg small" role="radiogroup" aria-label="Outline size" id="mask-mode">
+              <button type="button" role="radio" aria-checked="true" data-value="best">Best fit</button>
+              <button type="button" role="radio" aria-checked="false" data-value="small">Tighter</button>
+              <button type="button" role="radio" aria-checked="false" data-value="large">Wider</button>
+            </div>
+          </fieldset>
+          <label class="switch">
+            <input type="checkbox" id="crop" checked />
+            <span>Compare only the outlined spot</span>
+          </label>
+          <p class="fine">Turn this off to compare the whole photo instead.</p>
+        </details>
+      </aside>
+    </main>
+
+    <footer class="foot">
+      <p>
+        Maculo is an educational research tool, not a medical device. It cannot diagnose, detect or
+        rule out any condition. The matching model is licensed for non-commercial research only
+        (CC BY-NC-ND 4.0).
+      </p>
+      <p class="foot-meta" id="foot-meta"></p>
+    </footer>
+
+    <dialog id="intro" aria-labelledby="intro-title">
+      <form method="dialog">
+        <img src="/static/img/logo-mark.svg" alt="" width="48" height="48" />
+        <h2 id="intro-title">Before you start</h2>
+        <ul>
+          <li><b>This is not a diagnosis.</b> Maculo ranks how closely a photo matches the conditions on your list. It cannot tell you what you have.</li>
+          <li><b>It only knows your list.</b> If the right condition isn't listed, the top match will still be wrong.</li>
+          <li><b>See a professional</b> about any spot that changes, bleeds, itches or worries you.</li>
+          <li><b>Your photos aren't stored.</b> They're kept in memory for up to 15 minutes, then forgotten.</li>
+        </ul>
+        <button class="btn" value="ok" autofocus>I understand</button>
+      </form>
+    </dialog>
+
+    <dialog id="how" aria-labelledby="how-title">
+      <form method="dialog">
+        <h2 id="how-title">How Maculo works</h2>
+        <ol>
+          <li><b>Outline.</b> When you click, the Segment Anything model (SAM) draws the outline of the spot under your cursor.</li>
+          <li><b>Compare.</b> A vision-language model trained on skin images scores how well the outlined area matches a description of each condition on your list.</li>
+          <li><b>Rank.</b> The scores are turned into percentages that add up to 100% across your list. A high score means “closest of these”, not “likely”.</li>
+        </ol>
+        <p class="fine">
+          Results change with the photo's lighting, focus and framing, and with the list you choose.
+          Treat them as a starting point for questions, never as an answer.
+        </p>
+        <button class="btn" value="ok">Got it</button>
+      </form>
+    </dialog>
+  </body>
+</html>

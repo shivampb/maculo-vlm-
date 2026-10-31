@@ -1,0 +1,20 @@
+# Maculo runtime dependencies (tested versions).
+#
+# PyTorch comes from its own index. For an NVIDIA GPU (CUDA 12.4):
+#   pip install torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cu124
+# For CPU only:
+#   pip install torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cpu
+# Then:
+#   pip install -r requirements.txt
+
+torch==2.6.0
+torchvision==0.21.0
+transformers==5.21.1
+open_clip_torch==3.3.0
+fastapi==0.162.0
+uvicorn[standard]==0.54.0
+python-multipart==0.0.32
+python-dotenv==1.2.4
+numpy==2.5.4
+pillow==13.0.0
+opencv-python==5.0.0.93

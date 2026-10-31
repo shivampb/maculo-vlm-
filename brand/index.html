@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Maculo brand kit</title>
+    <link rel="icon" href="logo/maculo-mark.svg" type="image/svg+xml" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="tokens.css" />
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; background: #fff; color: var(--forest); font: 16px/1.55 var(--font-ui); }
+      .board { width: 100%; max-width: 1200px; margin: auto; padding: 40px; display: grid; gap: 20px;
+        grid-template-columns: repeat(12, 1fr); }
+      .c { border-radius: 24px; overflow: hidden; position: relative; }
+      .forest { background: var(--forest); color: #fff; }
+      .lime { background: var(--lime); color: var(--forest); }
+      .sky { background: var(--sky); color: var(--forest); }
+      .black { background: #000; color: #fff; }
+      .white { background: #fff; border: 1px solid var(--grey-200); }
+      .grid-bg::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+        background-image: linear-gradient(rgb(255 255 255 / 0.06) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 0.06) 1px, transparent 1px);
+        background-size: 56px 56px; }
+      .lime.grid-bg::before { background-image: linear-gradient(rgb(12 31 25 / 0.07) 1px, transparent 1px), linear-gradient(90deg, rgb(12 31 25 / 0.07) 1px, transparent 1px); }
+
+      /* Row 1 */
+      .hero { grid-column: span 8; height: 250px; display: grid; place-items: center; }
+      .hero .lockup { display: flex; align-items: center; gap: 18px; position: relative; }
+      .hero .lockup img { width: 84px; height: 84px; }
+      .wordmark { font: 600 72px/1 var(--font-ui); letter-spacing: -0.03em; }
+      .wordmark b { font-weight: 600; color: var(--lime); }
+      .icon { grid-column: span 4; height: 250px; display: grid; place-items: center; }
+      .icon img { width: 168px; }
+
+      /* Row 2 */
+      .phone-card { grid-column: span 5; grid-row: span 2; height: 440px; display: grid; place-items: end center; }
+      .phone { width: 250px; height: 400px; background: #fff; border: 9px solid var(--forest); border-bottom: 0;
+        border-radius: 38px 38px 0 0; padding: 16px 14px 0; position: relative; }
+      .phone .bar { display: flex; align-items: center; gap: 7px; font: 600 17px var(--font-ui); letter-spacing: -0.03em; }
+      .phone .bar img { width: 24px; }
+      .phone .shot { margin-top: 12px; height: 168px; border-radius: 14px; position: relative; overflow: hidden;
+        background: radial-gradient(circle at 45% 45%, #efc9b5, #d9a58c 60%, #c88f75); }
+      .phone .shot svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+      .phone .res { margin-top: 12px; font-size: 11px; color: var(--grey-500); }
+      .phone .res b { display: block; font: 600 20px var(--font-ui); color: var(--forest); letter-spacing: -0.02em; }
+      .phone .pill { display: inline-block; margin-top: 6px; background: var(--lime-50); color: var(--green-700);
+        border-radius: 99px; padding: 2px 9px; font-weight: 500; font-size: 10px; }
+      .phone .btn { margin-top: 12px; background: var(--forest); color: #fff; border-radius: 10px; text-align: center; padding: 9px; font-size: 12px; font-weight: 500; }
+
+      .wall { grid-column: span 7; height: 250px; background: #e9ecea; display: flex; align-items: center; justify-content: center; gap: 34px;
+        background-image: repeating-linear-gradient(90deg, #e4e8e6 0 14px, #eef1ef 14px 16px); }
+      .poster { width: 150px; height: 205px; border: 6px solid #d8c6a5; box-shadow: 0 10px 24px rgb(0 0 0 / 0.18); padding: 14px 12px;
+        display: flex; flex-direction: column; justify-content: space-between; }
+      .poster h4 { margin: 0; font: 600 19px/1.05 var(--font-ui); letter-spacing: -0.02em; }
+      .poster.lime h4 span { color: var(--forest); }
+      .poster.forest h4 span { color: var(--lime); }
+      .poster p { margin: 0; font-size: 7px; opacity: 0.8; }
+      .poster .foot { display: flex; align-items: center; gap: 4px; font: 600 9px var(--font-ui); }
+      .poster .foot img { width: 12px; }
+
+      .type { grid-column: span 7; height: 170px; padding: 28px 32px; display: flex; justify-content: space-between; align-items: flex-start; }
+      .type h3 { margin: 0; font: 600 40px/1 var(--font-ui); letter-spacing: -0.02em; }
+      .type p { margin: 10px 0 0; color: #b9c7c2; font-size: 14px; max-width: 24ch; }
+      .type .aa { font: 600 210px/0.8 var(--font-ui); letter-spacing: -0.04em; margin: 18px -6px 0 0; }
+
+      /* Row 3 */
+      .banner-card { grid-column: span 3; height: 420px; background: #c8d3cf;
+        background-image: linear-gradient(160deg, #dfe6e3, #b8c6c1); display: grid; place-items: center; }
+      .pole { position: absolute; top: 34px; left: 22px; right: 22px; height: 7px; background: #3b4a45; border-radius: 4px; }
+      .banner { width: 150px; height: 340px; margin-top: 30px; display: grid; place-items: center; position: relative;
+        clip-path: polygon(0 0, 100% 0, 100% 92%, 50% 100%, 0 92%); }
+      .banner .v { transform: rotate(90deg); display: flex; align-items: center; gap: 12px; white-space: nowrap; }
+      .banner .v img { width: 46px; transform: rotate(-90deg); }
+      .banner .v span { font: 600 54px/1 var(--font-ui); letter-spacing: -0.03em; }
+
+      .colors { grid-column: span 9; display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: 210px 210px; gap: 0; }
+      .sw { padding: 16px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; border-radius: 0; }
+      .sw .n { font: 400 24px var(--font-ui); }
+      .sw .hex { align-self: center; border: 1px solid currentColor; border-radius: 99px; padding: 5px 14px; font: 500 13px var(--font-ui); opacity: 0.9; margin-bottom: 70px; }
+      .sw .name { font-size: 12px; opacity: 0.75; }
+      .sw.forest .n { color: var(--lime); }
+      .s1 { grid-column: 1; grid-row: 1; } .s2 { grid-column: 2; grid-row: 2; } .s3 { grid-column: 3; grid-row: 1; }
+      .s4 { grid-column: 4; grid-row: 2; } .s5 { grid-column: 5; grid-row: 1; }
+
+      /* Guidelines */
+      .guide { max-width: 1200px; margin: 0 auto; padding: 24px 40px 80px; display: grid; gap: 20px; grid-template-columns: repeat(3, 1fr); }
+      .g { border: 1px solid var(--grey-200); border-radius: 20px; padding: 24px; }
+      .g h2 { margin: 0 0 4px; font: 600 13px var(--font-ui); text-transform: uppercase; letter-spacing: 0.1em; color: var(--green-700); }
+      .g h3 { margin: 0 0 12px; font: 600 22px/1.2 var(--font-ui); letter-spacing: -0.02em; }
+      .g p, .g li { font-size: 14px; color: #34443f; }
+      .g ul { padding-left: 18px; margin: 0; display: grid; gap: 6px; }
+      .logos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+      .logos div { border-radius: 12px; height: 74px; display: grid; place-items: center; }
+      .logos img { max-height: 34px; max-width: 85%; }
+      .wide { grid-column: span 3; }
+      .do { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--grey-200); border-radius: 12px; overflow: hidden; }
+      .do div { padding: 10px 14px; font-size: 14px; border-bottom: 1px solid var(--grey-200); }
+      .do .h { font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--grey-500); }
+      .do .y { color: var(--green-700); font-weight: 500; }
+      .do .x { color: var(--alert); }
+      code { font: 0.85em var(--font-mono); }
+      @media (max-width: 900px) {
+        .board { padding: 16px; gap: 12px; }
+        .board > * { grid-column: 1 / -1 !important; grid-row: auto !important; }
+        .colors { grid-template-columns: repeat(5, 1fr); grid-template-rows: 150px 150px; }
+        .sw .hex { margin-bottom: 30px; font-size: 10px; padding: 4px 8px; }
+        .wordmark { font-size: 48px; }
+        .type .aa { font-size: 140px; }
+        .guide { grid-template-columns: 1fr; padding: 16px 16px 48px; }
+        .wide { grid-column: auto; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="board" aria-label="Maculo brand board">
+      <section class="c forest grid-bg hero" aria-label="Primary logo">
+        <div class="lockup"><img src="logo/maculo-mark-lime.svg" alt="" /><span class="wordmark">macu<b>lo</b></span></div>
+      </section>
+      <section class="c lime icon" aria-label="App icon"><img src="logo/maculo-mark.svg" alt="Maculo mark" /></section>
+
+      <section class="c lime grid-bg phone-card" aria-label="App on a phone">
+        <div class="phone">
+          <div class="bar"><img src="logo/maculo-mark.svg" alt="" />maculo</div>
+          <div class="shot">
+            <svg viewBox="0 0 64 64" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <path d="M22 26v-3a3 3 0 0 1 3-3h3M36 20h3a3 3 0 0 1 3 3v3M42 38v3a3 3 0 0 1-3 3h-3M28 44h-3a3 3 0 0 1-3-3v-3" fill="none" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>
+              <path d="M29.6 25.5c2.2-1.4 5.2-1.3 7.1.3 2 1.7 2.2 4 1.3 5.7-.7 1.3-.5 2.7-1.4 4.1-1.3 2-4.4 2.5-6.7 1.4-2.4-1.1-3.9-3.5-3.6-6.1.2-2.2 1.4-4.2 3.3-5.4z" fill="#91F188" fill-opacity=".25" stroke="#91F188" stroke-width="1.1"/>
+              <circle cx="32.2" cy="31" r="1.3" fill="#99DBF5" stroke="#0C1F19" stroke-width=".5"/>
+            </svg>
+          </div>
+          <div class="res">Closest match on your list<b>Nevus · 71%</b><span class="pill">High confidence</span></div>
+          <div class="btn">Choose a photo</div>
+        </div>
+      </section>
+
+      <section class="c wall" aria-label="Posters">
+        <div class="poster lime">
+          <h4>A closer look at <span>skin spots.</span></h4>
+          <p>Outline a spot, then compare it with the conditions you choose. Research preview, not a diagnosis.</p>
+          <div class="foot"><img src="logo/maculo-mark.svg" alt="" />maculo</div>
+        </div>
+        <div class="poster forest">
+          <h4>Outline. Compare. <span>Ask better questions.</span></h4>
+          <p>Built for researchers, students and clinicians exploring skin image models.</p>
+          <div class="foot"><img src="logo/maculo-mark-lime.svg" alt="" />maculo</div>
+        </div>
+      </section>
+
+      <section class="c forest type" aria-label="Typeface">
+        <div><h3>Outfit</h3><p>Primary typeface for titles, paragraphs and the wordmark.</p></div>
+        <div class="aa" aria-hidden="true">Aa</div>
+      </section>
+
+      <section class="c banner-card" aria-label="Street banner">
+        <div class="pole"></div>
+        <div class="banner lime"><div class="v"><img src="logo/maculo-mark.svg" alt="" /><span>maculo</span></div></div>
+      </section>
+
+      <section class="c colors" aria-label="Color palette">
+        <div class="sw black s1"><span class="n">01</span><span class="hex">#000000</span><span class="name">Black</span></div>
+        <div class="sw lime s2"><span class="n">02</span><span class="hex">#91F188</span><span class="name">Maculo Lime</span></div>
+        <div class="sw forest s3"><span class="n">03</span><span class="hex">#0C1F19</span><span class="name">Deep Forest</span></div>
+        <div class="sw sky s4"><span class="n">04</span><span class="hex">#99DBF5</span><span class="name">Sky</span></div>
+        <div class="sw white s5"><span class="n">05</span><span class="hex">#FFFFFF</span><span class="name">White</span></div>
+      </section>
+    </main>
+
+    <section class="guide" aria-label="Guidelines">
+      <div class="g">
+        <h2>Logo</h2>
+        <h3>A focus frame around a spot.</h3>
+        <p>Four soft corners, an organic outline and the point you clicked: exactly what Maculo does.</p>
+        <div class="logos">
+          <div class="white"><img src="logo/maculo-logo.svg" alt="Logo on white" /></div>
+          <div class="forest"><img src="logo/maculo-logo-reversed.svg" alt="Logo on Deep Forest" /></div>
+          <div class="lime"><img src="logo/maculo-logo-on-lime.svg" alt="Logo on lime" /></div>
+          <div class="black"><img src="logo/maculo-mark-white.svg" alt="White mark on black" /></div>
+        </div>
+      </div>
+      <div class="g">
+        <h2>Color</h2>
+        <h3>Forest and lime lead.</h3>
+        <ul>
+          <li>Deep Forest for text, buttons and dark surfaces.</li>
+          <li>Lime for highlights and big moments, always with Forest or black text. Never lime text on white (1.4:1).</li>
+          <li>Sky for the point in the mark, info notes and charts.</li>
+          <li>Green <code>#1E7A3C</code> for links and green text on white.</li>
+          <li>Interfaces stay mostly white. Roughly 70% white, 20% Forest, 10% lime and sky.</li>
+        </ul>
+      </div>
+      <div class="g">
+        <h2>Type</h2>
+        <h3>One family: Outfit.</h3>
+        <ul>
+          <li>SemiBold 600 for titles and the wordmark, tracking −0.03em.</li>
+          <li>Regular 400 for body text, Light 300 for large intros.</li>
+          <li>Sentence case. Tabular numbers for scores.</li>
+          <li>Free under the SIL Open Font License. Lufga can replace it if licensed.</li>
+        </ul>
+      </div>
+      <div class="g wide">
+        <h2>Voice</h2>
+        <h3>Calm, plain, honest about what the model can't know.</h3>
+        <div class="do">
+          <div class="h">Write</div><div class="h">Not</div>
+          <div class="y">Closest match on your list: eczema (62%)</div><div class="x">You have eczema</div>
+          <div class="y">No condition on your list is a strong match.</div><div class="x">Result inconclusive (error 4)</div>
+          <div class="y">Compare · outline · score · research preview</div><div class="x">Diagnose · detect · screen · clinically proven</div>
+          <div class="y">A dermatologist should look at anything that changes or worries you.</div><div class="x">Consult a physician.</div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
