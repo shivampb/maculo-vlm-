@@ -3,6 +3,15 @@
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
+// Resolves once an image has loaded. (img.decode() can stall in a hidden tab.)
+function loaded(img, src) {
+  return new Promise((resolve, reject) => {
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error("The image could not be loaded."));
+    if (src !== undefined) img.src = src;
+    else if (img.complete && img.naturalWidth) resolve(img);
+  });
+}
 const store = {
   get(k, d) {
     try { const v = localStorage.getItem("maculo." + k); return v === null ? d : JSON.parse(v); } catch (_) { return d; }
@@ -255,8 +264,7 @@ async function takeFile(file) {
   state.result = null;
   const img = $("#photo");
   if (img.src) URL.revokeObjectURL(img.src);
-  img.src = URL.createObjectURL(state.blob);
-  await img.decode().catch(() => {});
+  await loaded(img, URL.createObjectURL(state.blob)).catch(() => {});
   state.size = { w: img.naturalWidth, h: img.naturalHeight };
   $("#drop").hidden = true;
   $("#editor").hidden = false;
@@ -467,12 +475,16 @@ async function analyze(retried = false) {
       }),
     });
     if (seq !== state.seq) return;
-    await paintHeat(d.outline.heatmap).catch(() => {});
-    if (seq !== state.seq) return;
     state.result = d;
+    state.heatReady = false;
     drawOverlay();
     showResult(d);
     status("");
+    // Paint the heatmap in the background: results never wait on it (image
+    // decoding can stall in a hidden tab).
+    paintHeat(d.outline.heatmap)
+      .then(() => { if (seq === state.seq) { state.heatReady = true; drawOverlay(); } })
+      .catch(() => {});
   } catch (e) {
     if (e.name === "AbortError" || seq !== state.seq) return;
     if (e.status === 503) return waitForModels();
@@ -504,7 +516,7 @@ function drawOverlay(draft = null) {
   svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
   svg.textContent = "";
   const o = state.result?.outline;
-  const heatOn = state.view === "heatmap" && !!o?.heatmap;
+  const heatOn = state.view === "heatmap" && !!o?.heatmap && state.heatReady;
   $("#heat").hidden = !heatOn;
   $("#heat-legend").hidden = $("#heat-note").hidden = state.view !== "heatmap";
   if (o && o.polygons.length) {
@@ -573,9 +585,7 @@ const HEAT_LUT = (() => {
 async function paintHeat(dataUrl) {
   const canvas = $("#heat");
   if (!dataUrl) return;
-  const img = new Image();
-  img.src = dataUrl;
-  await img.decode();
+  const img = await loaded(new Image(), dataUrl);
   canvas.width = img.naturalWidth;
   canvas.height = img.naturalHeight;
   const g = canvas.getContext("2d", { willReadFrequently: true });
@@ -653,6 +663,10 @@ function showResult(d) {
 }
 
 /* ---------------- Download ---------------- */
+function loadImage(src) {
+  return loaded(new Image(), src);
+}
+
 $("#download-btn").addEventListener("click", async () => {
   const d = state.result;
   if (!d) return;
@@ -670,7 +684,7 @@ $("#download-btn").addEventListener("click", async () => {
       const dim = new Path2D(`M0 0H${w}V${h}H0Z` + pathFrom(d.outline.polygons));
       g.fillStyle = "rgba(12,31,25,0.62)";
       g.fill(dim, "evenodd");
-    } else if (state.view === "heatmap" && d.outline.heatmap) {
+    } else if (state.view === "heatmap" && d.outline.heatmap && state.heatReady) {
       g.drawImage($("#heat"), 0, 0, w, h);
     } else {
       g.fillStyle = "rgba(145,241,136,0.28)";
@@ -688,13 +702,42 @@ $("#download-btn").addEventListener("click", async () => {
   g.fillRect(0, h, w, band);
   const top = d.predictions[0];
   const fs = Math.round(band * 0.3);
+  const pad = band * 0.3;
+  await document.fonts.load(`600 ${fs}px Outfit`).catch(() => {});
+  const title = `Closest match on my list: ${top.label} (${pct(top.score)})`;
   g.fillStyle = "#0C1F19";
   g.font = `600 ${fs}px Outfit, system-ui, sans-serif`;
   g.textBaseline = "middle";
-  g.fillText(`Closest match on my list: ${top.label} (${pct(top.score)})`, band * 0.3, h + band * 0.38);
+  g.fillText(title, pad, h + band * 0.38);
+  const textEnd = pad + g.measureText(title).width;
   g.fillStyle = "#5C6B66";
   g.font = `400 ${Math.round(fs * 0.78)}px Outfit, system-ui, sans-serif`;
-  g.fillText("Maculo research preview · not a diagnosis", band * 0.3, h + band * 0.72);
+  g.fillText("Maculo research preview · not a diagnosis", pad, h + band * 0.72);
+
+  // Brand logo, bottom-right: the mark plus the wordmark, or just the mark when
+  // the photo is too narrow for both to sit clear of the text.
+  const mark = await loadImage("/static/img/icon-192.png").catch(() => null);
+  if (mark) {
+    const ms = Math.round(band * 0.56);
+    const wfs = Math.round(fs * 1.15);
+    g.font = `600 ${wfs}px Outfit, system-ui, sans-serif`;
+    const word = "maculo";
+    const ww = g.measureText(word).width;
+    const gap = ms * 0.3;
+    const full = ms + gap + ww;
+    const showWord = w - pad - full > textEnd + pad;
+    const x = w - pad - (showWord ? full : ms);
+    const y = h + (band - ms) / 2;
+    g.drawImage(mark, x, y, ms, ms);
+    if (showWord) {
+      g.fillStyle = "#0C1F19";
+      g.save();
+      g.translate(x + ms + gap, h + band / 2);
+      g.fillText(word, 0, 0);
+      g.restore();
+    }
+  }
+
   c.toBlob((b) => {
     const a = document.createElement("a");
     a.href = URL.createObjectURL(b);

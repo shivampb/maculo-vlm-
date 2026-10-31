@@ -114,6 +114,14 @@ OG = """
 </div>"""
 
 
+README_BANNER = """
+<div style="width:1600px;height:480px;background:#0C1F19;border-radius:32px;display:flex;flex-direction:column;
+     align-items:center;justify-content:center;gap:28px;font-family:Outfit">
+  {lockup}
+  <div style="font:300 38px Outfit;color:#C9D6D1;letter-spacing:-.01em">A closer look at <span style="color:#91F188">skin spots.</span></div>
+</div>"""
+
+
 def main() -> None:
     browser = find_browser()
     png = BRAND / "png"
@@ -131,6 +139,13 @@ def main() -> None:
 
     og = BRAND / "social" / "og-image.png"
     render(browser, page(OG.replace("{mark}", fill(mark_inner()).replace('class="fill"', 'width="64" height="64"')), 1200, 630), 1200, 630, og)
+
+    # README banner: carries its own Deep Forest background, so it reads on
+    # GitHub's light and dark themes alike.
+    lockup = (fill(svg("maculo-logo-reversed.svg"))
+              .replace('viewBox="0 0 250 64"', 'viewBox="0 0 234 64"')  # trim space after the wordmark
+              .replace('class="fill"', 'width="468" height="128"'))
+    render(browser, page(README_BANNER.replace("{lockup}", lockup), 1600, 480), 1600, 480, png / "maculo-readme-banner.png")
 
     # Web app icons
     STATIC_IMG.mkdir(parents=True, exist_ok=True)

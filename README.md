@@ -1,7 +1,6 @@
-<p align="center"><img src="brand/png/maculo-logo.png" alt="Maculo" width="320"></p>
+<p align="center"><img src="brand/png/maculo-readme-banner.png" alt="Maculo: a closer look at skin spots" width="100%"></p>
 
-<p align="center"><b>A closer look at skin spots.</b><br>
-Outline a spot in a photo, then compare it with the conditions you choose.</p>
+<p align="center">Outline a spot in a photo, then compare it with the conditions you choose.</p>
 
 > **Research preview, not a medical device.** Maculo can't diagnose, detect or rule
 > out any condition. Scores only rank the conditions on your list. The matching
@@ -14,7 +13,7 @@ Outline a spot in a photo, then compare it with the conditions you choose.</p>
 1. **Outline.** Click a spot, or drag a box around a small one. The Segment Anything
    model (SAM) draws its outline. Use **+ Add area** / **− Remove area** to refine it.
 2. **Compare.** A vision-language model trained on skin images scores the outlined
-   area against each condition you've selected (55 presets in 7 groups, plus your own).
+   area against each condition you've selected (54 presets in 7 groups, plus your own).
 3. **Read honestly.** You get the closest matches, a plain confidence level, and notes
    when the result is weak, the outline looks off, or there's no "healthy skin" baseline.
 
