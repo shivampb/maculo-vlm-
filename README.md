@@ -60,9 +60,17 @@ pip install -r requirements.txt
 
 - **SAM** must be in `models/sam/` (`config.json`, `model.safetensors`,
   `preprocessor_config.json`, `processor_config.json`). Any Hugging Face
-  `SamModel` checkpoint works, e.g. `facebook/sam-vit-base`.
+  `SamModel` checkpoint works, e.g. `facebook/sam-vit-base`:
+
+  ```bash
+  huggingface-cli download facebook/sam-vit-base --local-dir models/sam
+  ```
+
 - **The matching model** (`Xieji-Li/MAGEN-O-MAKE`) downloads from Hugging Face on
-  the first run and is cached after that.
+  the first run (about 570 MB) and is cached after that.
+
+You only need the internet for that first download. After it, Maculo loads both
+models from disk. To make sure it never goes online, set `HF_HUB_OFFLINE=1`.
 
 ### Run
 
@@ -71,6 +79,35 @@ python -m maculo
 ```
 
 Open <http://127.0.0.1:8000>. Interactive API docs are at <http://127.0.0.1:8000/docs>.
+
+If you start it from a terminal where the venv isn't activated, Maculo restarts itself
+with `venv\Scripts\python.exe` so the pinned packages are used. Set
+`MACULO_NO_RELAUNCH=1` to turn that off.
+
+## Troubleshooting
+
+**The page says "The analysis models failed to load", or `/readyz` stays at 503.**
+Look at the server window for `model loading failed` and the error under it.
+
+| Error | Cause and fix |
+|---|---|
+| `No module named 'open_clip'` or a `transformers` import error such as `cannot import name 'VideoInput'` | The server is running on the wrong Python, usually the global one. Start with `start.bat` or `venv\Scripts\python.exe -m maculo`, then check with `where python` that the venv comes first. |
+| `SAM model not found in ...` | `models/sam/` is empty. See [Models](#models). |
+| It takes minutes and then times out | The first run is downloading the matching model, so check your connection. Re-running resumes the download. |
+
+**Check that the GPU is used.** This should print `2.6.0+cu124 True`:
+
+```bash
+python -c "import torch; print(torch.__version__, torch.cuda.is_available())"
+```
+
+If it shows `+cpu` or `False`, reinstall PyTorch with the `cu124` command above and add
+`--force-reinstall`. When the models are ready, the log says `models loaded on cuda in ...`.
+
+**`venv\Scripts\activate` runs the wrong Python.** This happens if the `venv` folder was
+copied or moved from somewhere else, because the activate scripts keep the old path.
+Recreate it with `python -m venv venv --clear` and reinstall as in
+[Setup from scratch](#setup-from-scratch).
 
 ## Settings
 
