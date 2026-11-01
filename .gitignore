@@ -9,3 +9,6 @@ models/
 .DS_Store
 Thumbs.db
 .claude/
+
+# Presentation deck (kept local, not pushed)
+presentation/
