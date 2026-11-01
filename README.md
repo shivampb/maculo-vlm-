@@ -6,6 +6,8 @@
 > out any condition. Scores only rank the conditions on your list. The matching
 > model is licensed for **non-commercial research only** (CC BY-NC-ND 4.0).
 
+<p align="center"><img src="docs/screenshot.webp" alt="Maculo showing a heatmap of the outlined area and the closest matching conditions" width="100%"></p>
+
 ---
 
 ## What it does
